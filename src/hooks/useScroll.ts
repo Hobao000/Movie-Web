@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// truyền vào biến threshold (ngưỡng cuộn), mặc định là 50px
 export const useScroll = (threshold: number = 50) => {
   const [isScrolled, setIsScrolled] = useState(false);
 

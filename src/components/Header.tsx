@@ -22,7 +22,6 @@ const Header = () => {
 
   return (
     <div 
-      // Chỉnh lại padding: md:px-8 cho iPad bớt chật, lg:px-16 cho PC
       className={`px-4 md:px-8 lg:px-16 flex justify-center fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-in-out ${
         isScrolled || isMobileMenuOpen
           ? 'bg-black/95 py-3 md:py-5 shadow-2xl backdrop-blur-md'

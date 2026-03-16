@@ -57,7 +57,6 @@ export interface CreditsResponse {
   cast: Cast[];
 }
 
-// Thêm định nghĩa cho Search Params của các trang danh sách
 export interface MovieSearchParams {
   type?: string;
   page?: string;
