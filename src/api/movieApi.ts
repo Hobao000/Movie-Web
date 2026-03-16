@@ -1,16 +1,20 @@
 import axiosClient from '@/lib/axios';
 import { MovieResponse, VideoResponse, MovieDetail, CreditsResponse } from '@/types/movie';
 
-
-const BANNED_REGEX = /\b(18\+|sex|porn|jav|hentai|xxx|gays?|lesbians?|18|boobs?|tits?|naked?|fuck?|child?|kid?|loli?)\b/i;
+const BANNED_REGEX = /\b(18\+|sex|porn|jav|hentai|xxx|gays?|lesbians?|18|boobs?|tits?|naked|fuck|child|kids?|lolis?|incest|erotic|f*ck|f*cking|onsen|nude)\b/i;
 
 const filterCleanContent = (response: MovieResponse): MovieResponse => {
   if (response && response.results) {
     response.results = response.results.filter((item) => {
+      // Quét tên phim
       const title = item.title || item.name || "";
       const originalTitle = item.original_title || item.original_name || "";
       
-      const textToCheck = `${title} ${originalTitle}`.toLowerCase();
+      // Quét phần tóm tắt phim (overview)
+      const overview = item.overview || "";
+      
+      // Gộp (Tên + Tên gốc + Mô tả) lại để quét
+      const textToCheck = `${title} ${originalTitle} ${overview}`.toLowerCase();
       
       return !BANNED_REGEX.test(textToCheck);
     });
@@ -42,7 +46,7 @@ export const movieApi = {
       params: { 
         query: keyword,
         page,
-        include_adult: false 
+        include_adult: false,
       }
     }) as Promise<MovieResponse>).then(filterCleanContent),
     

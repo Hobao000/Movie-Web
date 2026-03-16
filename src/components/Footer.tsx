@@ -1,7 +1,12 @@
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const Footer = () => {
+  const pathname = usePathname();
+
   const footerLinks = [
     { name: 'Home', href: '/' },
     { name: 'Live', href: '/' },
@@ -16,19 +21,32 @@ const Footer = () => {
     { name: 'Privacy policy', href: '/' },
   ];
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (pathname === '/' && href === '/') {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
-    <div 
+    <footer 
       className="min-h-[400px] lg:min-h-[480px] px-8 py-12 md:p-16 bg-cover bg-center bg-no-repeat relative" 
       style={{ backgroundImage: 'url("/assets/footer-bg-ft.jpg")' }}
     >
-      {/* phủ mờ (overlay) đen để chữ nổi bật hơn trên nền ảnh */}
-      <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-black/80 pointer-events-none z-0"></div>
 
       {/* Nội dung Footer */}
-      <div className="max-w-4xl h-full mx-auto flex flex-col justify-around relative z-10 gap-12">
+      <div className="max-w-4xl h-full mx-auto flex flex-col justify-around relative z-20 gap-12">
         
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center hover:cursor-pointer group">
+        <Link 
+          href="/" 
+          onClick={(e) => handleLinkClick(e, '/')}
+          className="flex items-center justify-center -translate-x-4.5 hover:cursor-pointer group"
+        >
           <Image
             src="/assets/logo-movie.png" 
             alt="Logo"
@@ -47,15 +65,15 @@ const Footer = () => {
             <Link 
               key={index} 
               href={link.href} 
-              className="hover:text-red-500 transition-colors duration-200"
+              onClick={(e) => handleLinkClick(e, link.href)}
+              className="hover:text-red-500 transition-colors duration-200 block py-1"
             >
               {link.name}
             </Link>
           ))}
         </div>
-
       </div>
-    </div>
+    </footer>
   );
 };
 
