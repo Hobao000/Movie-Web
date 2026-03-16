@@ -4,10 +4,8 @@ import { MovieResponse, VideoResponse, MovieDetail, CreditsResponse } from '@/ty
 
 const BANNED_REGEX = /\b(18\+|sex|porn|jav|hentai|xxx|gays?|lesbians?|18|boobs?|tits?|naked?|fuck?|child?|kid?|loli?)\b/i;
 
-// 2. HÀM CHẶN PHIM (Giờ đã dùng thẳng MovieResponse chuẩn xác 100%)
 const filterCleanContent = (response: MovieResponse): MovieResponse => {
   if (response && response.results) {
-    // TypeScript giờ đã biết item là kiểu Movie, không cần ép kiểu (Safe Casting) nữa
     response.results = response.results.filter((item) => {
       const title = item.title || item.name || "";
       const originalTitle = item.original_title || item.original_name || "";
