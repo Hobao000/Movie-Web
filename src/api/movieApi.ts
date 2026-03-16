@@ -1,39 +1,61 @@
 import axiosClient from '@/lib/axios';
-// Nhớ import thêm MovieDetail và CreditsResponse ở đây nhé Bảo
 import { MovieResponse, VideoResponse, MovieDetail, CreditsResponse } from '@/types/movie';
 
-export const movieApi = {
+// 1. TẠO "LƯỚI LỌC" BẰNG REGEX
+const BANNED_REGEX = /\b(18\+|sex|porn|jav|hentai|xxx|gay|lesbian|18|boobs?|tits?|naked?)\b/i;
 
+// 2. HÀM CHẶN PHIM (Giờ đã dùng thẳng MovieResponse chuẩn xác 100%)
+const filterCleanContent = (response: MovieResponse): MovieResponse => {
+  if (response && response.results) {
+    // TypeScript giờ đã biết item là kiểu Movie, không cần ép kiểu (Safe Casting) nữa
+    response.results = response.results.filter((item) => {
+      const title = item.title || item.name || "";
+      const originalTitle = item.original_title || item.original_name || "";
+      
+      const textToCheck = `${title} ${originalTitle}`.toLowerCase();
+      
+      return !BANNED_REGEX.test(textToCheck);
+    });
+  }
+  return response;
+};
+
+export const movieApi = {
   getTrending: (type: 'movie' | 'tv', page: number = 1) =>
-    axiosClient.get(`/trending/${type}/day`, { params: { page } }) as Promise<MovieResponse>,
+    (axiosClient.get(`/trending/${type}/day`, { 
+      params: { page, include_adult: false } 
+    }) as Promise<MovieResponse>).then(filterCleanContent),
 
   getTopRated: (type: 'movie' | 'tv', page: number = 1) =>
-    axiosClient.get(`/${type}/top_rated`, { params: { page } }) as Promise<MovieResponse>,
+    (axiosClient.get(`/${type}/top_rated`, { 
+      params: { page, include_adult: false } 
+    }) as Promise<MovieResponse>).then(filterCleanContent),
 
   getPopular: (type: 'movie' | 'tv', page: number = 1) =>
-    axiosClient.get(`/${type}/popular`, { params: { page } }) as Promise<MovieResponse>,
+    (axiosClient.get(`/${type}/popular`, { 
+      params: { page, include_adult: false } 
+    }) as Promise<MovieResponse>).then(filterCleanContent),
 
   getVideos: (type: 'movie' | 'tv', id: number) =>
     axiosClient.get(`/${type}/${id}/videos`) as Promise<VideoResponse>,
 
-  // search khi dùng tìm kiếm 'Watch more' được kết quả tìm kiếm
   search: (type: 'movie' | 'tv', keyword: string, page: number = 1) =>
-    axiosClient.get(`/search/${type}`, {
+    (axiosClient.get(`/search/${type}`, {
       params: { 
         query: keyword,
-        page 
+        page,
+        include_adult: false 
       }
-    }) as Promise<MovieResponse>,
+    }) as Promise<MovieResponse>).then(filterCleanContent),
     
-  // Lấy thông tin chi tiết phim (dùng chung cho Movie & TV)
   getDetail: (type: 'movie' | 'tv', id: number) =>
     axiosClient.get(`/${type}/${id}`) as Promise<MovieDetail>,
 
-  // Lấy danh sách diễn viên (Casts)
   getCredits: (type: 'movie' | 'tv', id: number) =>
     axiosClient.get(`/${type}/${id}/credits`) as Promise<CreditsResponse>,
 
-  // Lấy danh sách phim tương tự
   getSimilar: (type: 'movie' | 'tv', id: number) =>
-    axiosClient.get(`/${type}/${id}/similar`) as Promise<MovieResponse>,
+    (axiosClient.get(`/${type}/${id}/similar`, {
+      params: { include_adult: false } 
+    }) as Promise<MovieResponse>).then(filterCleanContent),
 };

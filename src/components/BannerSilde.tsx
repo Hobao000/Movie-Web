@@ -39,29 +39,35 @@ const BannerSlide = ({ items }: { items: Movie[] }) => {
           <SwiperSlide key={i}>
             {({ isActive }) => (
               <div 
-                className="relative h-[36rem] lg:h-[52rem] px-4 md:px-12 py-12 md:py-32 flex justify-center bg-center bg-cover before:content-[''] before:absolute before:inset-0 before:bg-black/60 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-28 after:bg-gradient-to-t after:from-black-main after:to-transparent"
+                // THAY ĐỔI Ở ĐÂY: Thêm pt-28 md:pt-40 lg:pt-0 để đẩy khối nội dung tụt xuống dưới Header
+                // Thay justify-center bằng items-center để nội dung luôn nằm giữa khối
+                className="relative h-[36rem] md:h-[40rem] lg:h-[52rem] px-4 md:px-12 pt-28 pb-12 md:pt-40 lg:py-32 flex items-center bg-center bg-cover before:content-[''] before:absolute before:inset-0 before:bg-black/60 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-28 md:after:h-40 after:bg-gradient-to-t after:from-black-main after:to-transparent"
                 style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${item.backdrop_path})` }}
               >
-                <div className="max-w-screen-2xl z-10 flex items-center justify-between w-full">
+                <div className="max-w-screen-2xl z-10 flex items-center justify-between w-full mx-auto">
                   <div className="w-full lg:w-2/3 px-4">
-                    <h2 className={`font-bold text-4xl md:text-6xl lg:text-8xl text-white transition duration-700 ease-in-out ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'}`}>
+                    {/* Hạn chế line-clamp cho tên phim quá dài trên mobile (nếu muốn) */}
+                    <h2 className={`font-bold text-4xl md:text-5xl lg:text-8xl text-white transition duration-700 ease-in-out line-clamp-2 md:line-clamp-none ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'}`}>
                       {item.title}
                     </h2>
-                    <p className={`font-medium text-white text-xs md:text-xl my-12 transition duration-700 delay-300 ease-in-out ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0 line-clamp-3 md:line-clamp-none'}`}>
+                    
+                    {/* Thêm mb-8 để nới rộng khoảng cách chữ với nút trên mobile */}
+                    <p className={`font-medium text-white text-sm md:text-lg lg:text-xl my-6 md:my-12 transition duration-700 delay-300 ease-in-out ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0 line-clamp-3 md:line-clamp-4 lg:line-clamp-none'}`}>
                       {item.overview}
                     </p>
-                    <div className={`flex transition duration-700 delay-500 ease-in-out ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'}`}>
+                    
+                    <div className={`flex flex-wrap gap-4 transition duration-700 delay-500 ease-in-out ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'}`}>
                                    
                       <Link 
                         href={`/movie/${item.id}`}
-                        className="btn-lg btn-primary mr-4 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,0,0,0.8)] hover:border-red-500 border border-transparent flex items-center justify-center"
+                        className="btn-sm md:btn-lg btn-primary transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,0,0,0.8)] hover:border-red-500 border border-transparent flex items-center justify-center"
                       >
                         Watch now
                       </Link>
 
                       <button 
                         onClick={() => handleWatchTrailer(item.id)}
-                        className="btn-lg btn-default transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]"
+                        className="btn-sm md:btn-lg btn-default transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]"
                       >
                         Watch trailer
                       </button>

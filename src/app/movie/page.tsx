@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { movieApi } from "@/api/movieApi";
 import MovieCard from "@/components/MovieCard";
@@ -9,14 +10,12 @@ import { NextPageProps } from "@/types/next";
 import { useUnwrapParams } from "@/hooks/useParams";
 
 export default function MoviePage({ searchParams }: NextPageProps) {
-
-  const resolvedSearchParams = useUnwrapParams(searchParams!) as MovieSearchParams;
-  
-  // Lấy type từ URL (ví dụ: ?type=top_rated), mặc định là popular
+  const router = useRouter();
+  const pathname = usePathname();
+  const resolvedSearchParams = useUnwrapParams(searchParams!) as MovieSearchParams & { query?: string };
   const currentType = resolvedSearchParams?.type || "popular";
-
-  const [keyword, setKeyword] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const currentQuery = resolvedSearchParams?.query || "";
+  const [keyword, setKeyword] = useState(currentQuery);
 
   const {
     data,
@@ -25,20 +24,16 @@ export default function MoviePage({ searchParams }: NextPageProps) {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery<MovieResponse>({
-
-    queryKey: ["movies", searchQuery, currentType], 
+    queryKey: ["movies", currentQuery, currentType], 
     queryFn: ({ pageParam = 1 }) => {
-      // Ưu tiên 1: Nếu người dùng đang search tại ô tìm kiếm
-      if (searchQuery) {
-        return movieApi.search("movie", searchQuery, pageParam as number);
+      if (currentQuery) {
+        return movieApi.search("movie", currentQuery, pageParam as number);
       }
       
-      // Ưu tiên 2: Nếu bấm từ View More "Top Rated" ở trang Home
       if (currentType === "top_rated") {
         return movieApi.getTopRated("movie", pageParam as number);
       }
       
-      // Mặc định: Lấy phim Popular
       return movieApi.getPopular("movie", pageParam as number);
     },
     initialPageParam: 1,
@@ -52,14 +47,29 @@ export default function MoviePage({ searchParams }: NextPageProps) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setSearchQuery(keyword);
+
+    const bannedWords = ["18+", "sex", "porn", "jav", "hentai", "xxx", "gay", "lesbian", "18", "boobs", "boob", "tits", "tit"]; 
+    const lowerKeyword = keyword.toLowerCase();
+
+    const isBanned = bannedWords.some((word) => lowerKeyword.includes(word));
+
+    if (isBanned) {
+      alert("Từ khóa nhạy cảm! BaoMovies không hỗ trợ tìm kiếm nội dung này.");
+      setKeyword(""); 
+      return;
+    }
+
+    if (keyword.trim()) {
+      router.push(`${pathname}?query=${encodeURIComponent(keyword)}`);
+    } else {
+      router.push(pathname); 
+    }
   };
 
   const movies = data?.pages.flatMap((page) => page.results) || [];
 
-  // Xác định tiêu đề hiển thị trên Banner 
   const getPageTitle = () => {
-    if (searchQuery) return `Search: ${searchQuery}`;
+    if (currentQuery) return `Search: ${currentQuery}`;
     return currentType === "top_rated" ? "Top Rated Movies" : "Popular Movies";
   };
 
@@ -72,7 +82,7 @@ export default function MoviePage({ searchParams }: NextPageProps) {
                      after:content-[''] after:absolute after:inset-0 
                      after:bg-gradient-to-t after:from-black-main after:to-transparent"
         >
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-3xl md:text-5xl font-bold z-10 tracking-widest text-center w-full px-4 drop-shadow-lg">
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-3xl md:text-5xl font-bold z-10 tracking-widest text-center w-full px-4 drop-shadow-lg uppercase">
             {getPageTitle()}
           </span>
         </div>
@@ -83,16 +93,19 @@ export default function MoviePage({ searchParams }: NextPageProps) {
             {/* Thanh Search */}
             <form 
               onSubmit={handleSearch}
-              className="flex items-center relative rounded-full bg-black/40 backdrop-blur-md w-full md:w-fit lg:w-fit border border-white/10 p-1 mb-12 shadow-xl"
+              className="flex items-center relative rounded-full bg-black/40 backdrop-blur-md w-full max-w-full md:w-fit lg:w-fit border border-white/10 p-1 mb-12 shadow-xl"
             >
               <input
                 type="text"
                 placeholder="Enter keyword"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                className="outline-none border-none rounded-full px-6 py-3 bg-transparent placeholder-gray-500 text-white flex-1 md:flex-auto md:w-96"
+                className="outline-none border-none rounded-full px-4 md:px-6 py-2 md:py-3 bg-transparent placeholder-gray-500 text-white flex-1 min-w-0 text-sm md:text-base md:w-96"
               />
-              <button className="btn-sm btn-primary py-2 px-10 rounded-full shadow-lg hover:shadow-red-main/50 transition-all font-bold" type="submit">
+              <button 
+                className="btn-sm btn-primary py-2 px-5 md:px-10 rounded-full shadow-lg hover:shadow-red-main/50 transition-all font-bold text-sm md:text-base whitespace-nowrap" 
+                type="submit"
+              >
                 Search
               </button>
             </form>
@@ -113,8 +126,19 @@ export default function MoviePage({ searchParams }: NextPageProps) {
               </div>
             )}
 
+            {/* THÔNG BÁO KHÔNG TÌM THẤY PHIM */}
+            {!isLoading && movies.length === 0 && (
+              <div className="w-full py-20 flex flex-col items-center justify-center text-center">
+                <span className="text-6xl mb-4">🎬</span>
+                <h3 className="text-white text-2xl md:text-3xl font-bold mb-2">Không tìm thấy kết quả!</h3>
+                <p className="text-gray-400 max-w-md">
+                  Rất tiếc, BaoMovies không tìm thấy phim nào khớp với từ khóa &quot;<span className="text-red-main font-semibold">{currentQuery}</span>&quot;. Vui lòng thử lại với từ khóa khác nhé.
+                </p>
+              </div>
+            )}
+
             {/* Nút Watch More */}
-            {hasNextPage && (
+            {hasNextPage && movies.length > 0 && ( 
               <div className="text-center mt-12">
                 <button 
                   onClick={() => fetchNextPage()}
