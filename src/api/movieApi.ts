@@ -1,8 +1,8 @@
 import axiosClient from '@/lib/axios';
 import { MovieResponse, VideoResponse, MovieDetail, CreditsResponse } from '@/types/movie';
 
-// 1. TẠO "LƯỚI LỌC" BẰNG REGEX
-const BANNED_REGEX = /\b(18\+|sex|porn|jav|hentai|xxx|gay|lesbian|18|boobs?|tits?|naked?)\b/i;
+
+const BANNED_REGEX = /\b(18\+|sex|porn|jav|hentai|xxx|gays?|lesbians?|18|boobs?|tits?|naked?|fuck?|child?|kid?|loli?)\b/i;
 
 // 2. HÀM CHẶN PHIM (Giờ đã dùng thẳng MovieResponse chuẩn xác 100%)
 const filterCleanContent = (response: MovieResponse): MovieResponse => {

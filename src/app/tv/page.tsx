@@ -49,7 +49,9 @@ export default function TVSeriesPage({ searchParams }: NextPageProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const bannedWords = ["18+", "sex", "porn", "jav", "hentai", "xxx", "gay", "lesbian", "18", "boobs", "boob", "tits", "tit"]; 
+    const bannedWords = [ "18+", "sex", "porn", "jav", "hentai", "xxx", "gay",
+                          "lesbian", "18", "boobs", "boob", "tits", "tit", 
+                          "lolicon", "loli","kid", "fuck", "child", "children", "naked"]; ; 
     const lowerKeyword = keyword.toLowerCase();
 
     const isBanned = bannedWords.some((word) => lowerKeyword.includes(word));
