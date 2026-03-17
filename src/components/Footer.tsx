@@ -19,6 +19,7 @@ const Footer = () => {
     { name: 'Top IMDB', href: '/' },
     { name: 'About us', href: '/' },
     { name: 'Privacy policy', href: '/' },
+    { name: 'Report', href: '/'},
   ];
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -45,7 +46,7 @@ const Footer = () => {
         <Link 
           href="/" 
           onClick={(e) => handleLinkClick(e, '/')}
-          className="flex items-center justify-center -translate-x-4.5 hover:cursor-pointer group"
+          className="flex items-center justify-center -translate-x-8 hover:cursor-pointer group"
         >
           <Image
             src="/assets/logo-movie.png" 

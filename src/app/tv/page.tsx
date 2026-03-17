@@ -49,16 +49,11 @@ export default function TVSeriesPage({ searchParams }: NextPageProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const bannedWords = [ "18+", "sex", "porn", "jav", "hentai", "xxx", "gay",
-                          "lesbian", "18", "boobs", "boob", "tits", "tit", 
-                          "lolicon", "loli","kid", "fuck", "child", "children", "naked"]; ; 
-    const lowerKeyword = keyword.toLowerCase();
+    const bannedRegex = /\b(18\+|sex|porn|jav|hentai|xxx|gays?|lesbians?|18|boobs?|tits?|naked|fuck|child|kids?|lolis?|incest|erotic|nude|nsfw|gore|bitch)\b|(phim\s*cấp\s*3|đụ|địt|phò|điếm|lồn|cặc|đỹ|đĩ|chịch)/iu;
 
-    const isBanned = bannedWords.some((word) => lowerKeyword.includes(word));
-
-    if (isBanned) {
+    if (bannedRegex.test(keyword)) {
       alert("Từ khóa nhạy cảm! BaoMovies không hỗ trợ tìm kiếm nội dung này.");
-      setKeyword(""); 
+      setKeyword("");
       return; 
     }
 
