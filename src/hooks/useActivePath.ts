@@ -8,12 +8,12 @@ export const useActivePath = () => {
    * Hỗ trợ bắt cả các trang con (ví dụ: /movie/123 vẫn tính là /movie)
    */
   const checkActive = (path: string) => {
-    // 1. Trường hợp trang chủ: Phải khớp hoàn toàn để tránh việc trang nào cũng đỏ
+    //Trường hợp trang chủ: Phải khớp hoàn toàn để tránh việc trang nào cũng đỏ
     if (path === '/') {
       return pathname === '/';
     }
 
-    // 2. Các trường hợp khác (Movies, TV Series): Chỉ cần bắt đầu bằng path đó
+    //Các trường hợp khác (Movies, TV Series): Chỉ cần bắt đầu bằng path đó
     // Ví dụ: /movie/799882 bắt đầu bằng /movie => true
     return pathname.startsWith(path);
   };
