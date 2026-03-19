@@ -27,7 +27,6 @@ export const movieApi = {
         query: keyword,
         page,
         include_adult: false,
-        language: 'vi-VN'
       }
     }) as Promise<MovieResponse>).then(filterCleanContent),
     
