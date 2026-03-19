@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 // Cấu hình SEO cơ bản
 export const metadata: Metadata = {
   title: "BaoMovies - Xem phim thả ga",
-  description: "Dự án web xem phim với Next.js",
+  description: "Dự án web info với Next.js",
 };
 
 // Layout chính của ứng dụng
