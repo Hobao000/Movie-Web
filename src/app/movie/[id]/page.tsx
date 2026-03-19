@@ -44,7 +44,7 @@ export default function MovieDetailPage({ params }: NextPageProps) {
   if (!movie) return <div className="text-white text-center py-20">Không tìm thấy phim.</div>;
 
   const youtubeVideos = videos?.results.filter((v) => v.site === "YouTube").slice(0, 5) || [];
-  const casts = credits?.cast.slice(0, 5) || [];
+  const casts = credits?.cast.slice(0, 8) || [];
 
   return (
     <main className="bg-black-main">

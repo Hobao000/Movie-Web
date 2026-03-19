@@ -46,7 +46,7 @@ export default function TVDetailPage({ params }: NextPageProps) {
   if (!tvShow) return <div className="text-white text-center py-20">Không tìm thấy phim bộ này.</div>;
 
   const youtubeVideos = videos?.results.filter((v) => v.site === "YouTube").slice(0, 5) || [];
-  const casts = credits?.cast.slice(0, 5) || [];
+  const casts = credits?.cast.slice(0, 8) || [];
 
   return (
     <main className="bg-black-main">
