@@ -112,8 +112,8 @@ const MovieSection = ({ title, items, category, viewMoreHref }: MovieSectionProp
       slidesPerView={'auto'}
       className="!overflow-visible"
     >
-      {items?.map((item) => (
-        <SwiperSlide key={item.id} className="!w-[150px] md:!w-[200px] lg:!w-[220px]">
+      {items?.map((item, index) => (
+        <SwiperSlide key={`${item.id}-${index}`} className="!w-[150px] md:!w-[200px] lg:!w-[220px]">
           <MovieCard item={item} category={category} />
         </SwiperSlide>
       ))}
