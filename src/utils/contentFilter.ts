@@ -1,7 +1,6 @@
 import { MovieResponse } from '@/types/movie';
 
-// DANH SÁCH TỪ CẤM
-const BANNED_REGEX = /\b(18\+|sex|porn|jav|hentai|xxx|gays?|lesbians?|boobs?|tits?|fuck|child|kids?|lolis?|incest|erotic|nude|nsfw|gore|bitch)\b|(phim\s*cấp\s*3|đụ|địt|phò|điếm|lồn|cặc|đỹ|đĩ|chịch)/iu;
+export const BANNED_REGEX = /\b(18+|sex|porn|jav|hentai|xxx|gays?|lesbians?|boobs?|tits?|fuck|child|kids|lolis?|incest|erotic|nude|nsfw|gore|bitch)\b|(phim\s*cấp\s*3|đụ|địt|phò|điếm|lồn|cặc|đỹ|đĩ|chịch)/iu;
 
 export const filterCleanContent = (response: MovieResponse): MovieResponse => {
   // Nếu không có dữ liệu thì trả về nguyên vẹn
@@ -19,7 +18,7 @@ export const filterCleanContent = (response: MovieResponse): MovieResponse => {
     // Biến toàn data của 1 bộ phim (bao gồm cả mảng thể loại, diễn viên nếu có) thành 1 chuỗi văn bản dài.
     const everythingElse = JSON.stringify(item).toLowerCase();
 
-    // Gộp tất cả lại thành 1 siêu chuỗi
+    // Gộp tất cả lại thành 1 chuỗi
     const textToCheck = `${title} ${originalTitle} ${overview} ${everythingElse}`.toLowerCase();
 
     // Quét Regex: Trả về TRUE (giữ lại) nếu KHÔNG chứa từ cấm

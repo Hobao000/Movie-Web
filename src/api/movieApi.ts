@@ -1,43 +1,79 @@
 import axiosClient from '@/lib/axios';
-import { MovieResponse, VideoResponse, MovieDetail, CreditsResponse } from '@/types/movie';
+import { 
+  MovieResponse, 
+  VideoResponse, 
+  MovieDetail, 
+  CreditsResponse, 
+  Movie 
+} from '@/types/movie';
 import { filterCleanContent } from '@/utils/contentFilter';
+
+const fetchWithQuota = async (
+  endpoint: string,
+  params: Record<string, string | number | undefined>, 
+  targetCount: number = 24
+): Promise<MovieResponse> => {
+  let currentPage = Number(params.page) || 1;
+  let accumulatedMovies: Movie[] = []; 
+  let lastResponse: MovieResponse | null = null; 
+
+  while (accumulatedMovies.length < targetCount) {
+    const response = (await axiosClient.get(endpoint, {
+      params: { ...params, page: currentPage, include_adult: false },
+    })) as MovieResponse;
+
+    lastResponse = response;
+
+    const cleanedData = filterCleanContent(lastResponse);
+
+    if (cleanedData && cleanedData.results) {
+      accumulatedMovies = [...accumulatedMovies, ...cleanedData.results];
+    }
+
+    if (currentPage >= lastResponse.total_pages) {
+      break;
+    }
+
+    if (accumulatedMovies.length < targetCount) {
+      currentPage++;
+    }
+  }
+
+  if (!lastResponse) {
+    throw new Error("Không thể tải dữ liệu từ máy chủ");
+  }
+
+  const exactMovies = accumulatedMovies.slice(0, targetCount);
+
+  return {
+    ...lastResponse,
+    page: currentPage,
+    results: exactMovies,
+  };
+};
 
 export const movieApi = {
   getTrending: (type: 'movie' | 'tv', page: number = 1) =>
-    (axiosClient.get(`/trending/${type}/day`, { 
-      params: { page, include_adult: false } 
-    }) as Promise<MovieResponse>).then(filterCleanContent),
+    fetchWithQuota(`/trending/${type}/day`, { page }),
 
   getTopRated: (type: 'movie' | 'tv', page: number = 1) =>
-    (axiosClient.get(`/${type}/top_rated`, { 
-      params: { page, include_adult: false } 
-    }) as Promise<MovieResponse>).then(filterCleanContent),
+    fetchWithQuota(`/${type}/top_rated`, { page }),
 
   getPopular: (type: 'movie' | 'tv', page: number = 1) =>
-    (axiosClient.get(`/${type}/popular`, { 
-      params: { page, include_adult: false } 
-    }) as Promise<MovieResponse>).then(filterCleanContent),
+    fetchWithQuota(`/${type}/popular`, { page }),
+
+  search: (type: 'movie' | 'tv', keyword: string, page: number = 1) =>
+    fetchWithQuota(`/search/${type}`, { query: keyword, page }),
+
+  getSimilar: (type: 'movie' | 'tv', id: number, page: number = 1) =>
+    fetchWithQuota(`/${type}/${id}/similar`, { page }),
 
   getVideos: (type: 'movie' | 'tv', id: number) =>
     axiosClient.get(`/${type}/${id}/videos`) as Promise<VideoResponse>,
 
-  search: (type: 'movie' | 'tv', keyword: string, page: number = 1) =>
-    (axiosClient.get(`/search/${type}`, {
-      params: { 
-        query: keyword,
-        page,
-        include_adult: false,
-      }
-    }) as Promise<MovieResponse>).then(filterCleanContent),
-    
   getDetail: (type: 'movie' | 'tv', id: number) =>
     axiosClient.get(`/${type}/${id}`) as Promise<MovieDetail>,
 
   getCredits: (type: 'movie' | 'tv', id: number) =>
     axiosClient.get(`/${type}/${id}/credits`) as Promise<CreditsResponse>,
-
-  getSimilar: (type: 'movie' | 'tv', id: number) =>
-    (axiosClient.get(`/${type}/${id}/similar`, {
-      params: { include_adult: false } 
-    }) as Promise<MovieResponse>).then(filterCleanContent),
 };
