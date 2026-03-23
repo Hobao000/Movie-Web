@@ -116,6 +116,7 @@ export const metadata: Metadata = {
     "og:image:width": "1200",
     "og:image:height": "630",
     "og:image:type": "image/jpeg",
+    "og:image:secure_url": `${SITE_URL}/assets/og-image.jpg`,
   },
 };
 
