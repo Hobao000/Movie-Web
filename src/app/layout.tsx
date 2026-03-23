@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     siteName: "BaoMovies",
     images: [
       {
-        url: "/assets/og-image.jpg",
+        url: `${SITE_URL}/assets/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "BaoMovies - Xem Phim Chất Lượng Cao",
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     title: "BaoMovies - Trải nghiệm điện ảnh đỉnh cao",
     description: "Cập nhật liên tục các bộ phim rạp, TV series hot nhất với chất lượng Full HD.",
     creator: "@baomovies",
-    images: ["/assets/og-image.jpg"],
+    images: [`${SITE_URL}/assets/og-image.jpg`],
   },
 
   robots: {
