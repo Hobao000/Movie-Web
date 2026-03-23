@@ -69,7 +69,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 
-  //Khung xem trước khi share Twitter/X
   twitter: {
     card: "summary_large_image",
     title: "BaoMovies - Trải nghiệm điện ảnh đỉnh cao",
@@ -78,7 +77,6 @@ export const metadata: Metadata = {
     images: ["/assets/og-image.jpg"],
   },
 
-  //Cấu hình cho Bot của Google
   robots: {
     index: true,
     follow: true,
@@ -93,14 +91,12 @@ export const metadata: Metadata = {
     },
   },
 
-  //Cấu hình  icon cho Apple (iPhone/iPad)
   icons: {
     apple: [
       { url: "/assets/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
 
-  //Các cấu hình tối ưu thêm cho Trình duyệt & Thiết bị di động
   category: "Entertainment & Movies",
   classification: "Entertainment",
   referrer: "origin-when-cross-origin",
