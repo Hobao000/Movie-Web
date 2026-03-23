@@ -123,7 +123,7 @@ export const metadata: Metadata = {
   },
 };
 
-// Layout chính của ứng dụng
+// Layout chính
 export default function RootLayout({
   children,
 }: Readonly<{
