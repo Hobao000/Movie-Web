@@ -57,14 +57,14 @@ const BannerSlide = ({ items }: { items: Movie[] }) => {
                                    
                       <Link 
                         href={`/movie/${item.id}`}
-                        className="btn-sm md:btn-lg btn-primary transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,0,0,0.8)] hover:border-red-500 border border-transparent flex items-center justify-center"
+                        className="btn-sm md:btn-lg btn-primary transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,0,0,0.8)] hover:border-red-500 border border-transparent flex items-center justify-center cursor-pointer"
                       >
                         Watch now
                       </Link>
 
                       <button 
                         onClick={() => handleWatchTrailer(item.id)}
-                        className="btn-sm md:btn-lg btn-default transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]"
+                        className="btn-sm md:btn-lg btn-default transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] cursor-pointer"
                       >
                         Watch trailer
                       </button>
