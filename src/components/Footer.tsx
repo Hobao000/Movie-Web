@@ -1,11 +1,11 @@
 "use client";
 
-import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const Footer = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const footerLinks = [
     { name: 'Home', href: '/' },
@@ -22,13 +22,15 @@ const Footer = () => {
     { name: 'Report', href: '/'},
   ];
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  // Hàm xử lý chuyển trang + cuộn
+  const handleNavigation = (href: string) => {
     if (pathname === '/' && href === '/') {
-      e.preventDefault();
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
       });
+    } else {
+      router.push(href);
     }
   };
 
@@ -42,11 +44,9 @@ const Footer = () => {
       {/* Nội dung Footer */}
       <div className="max-w-4xl h-full mx-auto flex flex-col justify-around relative z-20 gap-12">
         
-        {/* Logo */}
-        <Link 
-          href="/" 
-          onClick={(e) => handleLinkClick(e, '/')}
-          className="flex items-center justify-center -translate-x-8 hover:cursor-pointer group"
+        <div 
+          onClick={() => handleNavigation('/')}
+          className="flex items-center justify-center -translate-x-8 hover:cursor-pointer cursor-pointer group"
         >
           <Image
             src="/assets/logo-movie.png" 
@@ -58,19 +58,17 @@ const Footer = () => {
           <h1 className="text-white font-semibold text-2xl md:text-4xl group-hover:text-red-500 transition-colors duration-300">
             BaoMovies
           </h1>
-        </Link>
+        </div>
 
-        {/* Danh sách các Links */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 text-white font-semibold text-base md:text-xl items-start text-center md:text-left">
           {footerLinks.map((link, index) => (
-            <Link 
+            <div 
               key={index} 
-              href={link.href} 
-              onClick={(e) => handleLinkClick(e, link.href)}
-              className="hover:text-red-500 transition-colors duration-200 block py-1"
+              onClick={() => handleNavigation(link.href)}
+              className="hover:text-red-500 transition-colors duration-200 block py-1 cursor-pointer"
             >
               {link.name}
-            </Link>
+            </div>
           ))}
         </div>
       </div>

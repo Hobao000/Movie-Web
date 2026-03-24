@@ -7,10 +7,11 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import { Movie } from '@/types/movie';
 import { movieApi } from '@/api/movieApi'; 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const BannerSlide = ({ items }: { items: Movie[] }) => {
   const [trailerSrc, setTrailerSrc] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleWatchTrailer = async (id: number) => {
     try {
@@ -55,12 +56,12 @@ const BannerSlide = ({ items }: { items: Movie[] }) => {
                     
                     <div className={`flex flex-wrap gap-4 transition duration-700 delay-500 ease-in-out ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'}`}>
                                    
-                      <Link 
-                        href={`/movie/${item.id}`}
+                      <div 
+                        onClick={() => router.push(`/movie/${item.id}`)}
                         className="btn-sm md:btn-lg btn-primary transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,0,0,0.8)] hover:border-red-500 border border-transparent flex items-center justify-center cursor-pointer"
                       >
                         Watch now
-                      </Link>
+                      </div>
 
                       <button 
                         onClick={() => handleWatchTrailer(item.id)}

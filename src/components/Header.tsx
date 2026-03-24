@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from 'react'; 
-import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useScroll } from '@/hooks/useScroll'; 
 import { useActivePath } from '@/hooks/useActivePath'; 
 
 const Header = () => {
   const isScrolled = useScroll(50); 
   const { checkActive } = useActivePath(); 
+  const router = useRouter(); 
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -19,6 +20,11 @@ const Header = () => {
   ];
 
   const textShadowClass = "drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] md:drop-shadow-[0_2px_5px_rgba(0,0,0,1)]";
+
+  const handleNavigation = (href: string) => {
+    router.push(href);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <div 
@@ -31,7 +37,7 @@ const Header = () => {
       <div className="max-w-screen-2xl flex flex-row justify-between items-center w-full">
         
         {/* LOGO & BRAND NAME */}
-        <Link href="/" className="flex items-center hover:cursor-pointer group">
+        <div onClick={() => handleNavigation('/')} className="flex items-center cursor-pointer group">
           <Image
             src="/assets/logo-movie.png"
             alt="Logo"
@@ -42,11 +48,11 @@ const Header = () => {
           <h1 className={`text-white font-extrabold text-2xl md:text-3xl lg:text-4xl xl:text-5xl tracking-tighter group-hover:text-red-500 transition-colors duration-300 ${!isScrolled && textShadowClass}`}>
             BaoMovies
           </h1> 
-        </Link>
+        </div>
 
         {/* Nút menu sổ */}
         <button 
-          className="md:hidden text-white p-2 focus:outline-none"
+          className="md:hidden text-white p-2 focus:outline-none cursor-pointer"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? (
@@ -62,15 +68,15 @@ const Header = () => {
             const isActive = checkActive(link.href);
             return (
               <div key={index} className="px-3 lg:px-6"> 
-                <Link 
-                  href={link.href} 
-                  className={`relative text-lg md:text-xl lg:text-2xl font-bold whitespace-nowrap text-white hover:text-red-500 transition-colors duration-300 py-2 group block ${!isScrolled && textShadowClass}`}
+                <div 
+                  onClick={() => handleNavigation(link.href)}
+                  className={`relative text-lg md:text-xl lg:text-2xl font-bold whitespace-nowrap text-white hover:text-red-500 transition-colors duration-300 py-2 group block cursor-pointer ${!isScrolled && textShadowClass}`}
                 >
                   {link.name} 
                   <span className={`absolute bottom-0 left-0 w-full h-[3px] bg-red-500 rounded-full transition-transform duration-500 ease-in-out origin-center
                   ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}
                   ></span> 
-                </Link>
+                </div>
               </div>
             );
           })}
@@ -86,14 +92,13 @@ const Header = () => {
         {navLinks.map((link, index) => {
           const isActive = checkActive(link.href);
           return (
-            <Link
+            <div
               key={index}
-              href={link.href}
-              onClick={() => setIsMobileMenuOpen(false)} 
-              className={`text-xl font-bold transition-colors duration-300 ${isActive ? 'text-red-500' : 'text-white hover:text-red-500'}`}
+              onClick={() => handleNavigation(link.href)} 
+              className={`text-xl font-bold cursor-pointer transition-colors duration-300 ${isActive ? 'text-red-500' : 'text-white hover:text-red-500'}`}
             >
               {link.name}
-            </Link>
+            </div>
           );
         })}
       </div>
