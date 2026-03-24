@@ -11,7 +11,7 @@ import { filterCleanContent } from '@/utils/contentFilter';
 const fetchWithQuota = async (
   endpoint: string,
   params: Record<string, string | number | undefined>, 
-  targetCount: number = 12
+  targetCount: number = 18
 ): Promise<MovieResponse> => {
   let currentPage = Number(params.page) || 1;
   let bucketMovies: Movie[] = []; 
