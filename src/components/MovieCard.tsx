@@ -1,6 +1,6 @@
 "use client";
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Movie } from '@/types/movie';
 
 interface Props {
@@ -9,12 +9,18 @@ interface Props {
 }
 
 const MovieCard = ({ item, category }: Props) => {
+  const router = useRouter();
+
   const bg = item.poster_path 
     ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
     : '/assets/no-poster.jpg';
 
+  const handleClick = () => {
+    router.push(`/${category}/${item.id}`);
+  };
+
   return (
-    <Link href={`/${category}/${item.id}`} className="group/container block cursor-pointer">
+    <div onClick={handleClick} className="group/container block cursor-pointer">
       <div 
         className="relative w-full h-72 2xl:h-80 rounded-3xl bg-gray-800 bg-center bg-cover group/poster 
                    after:content-[''] after:absolute after:inset-0 after:rounded-3xl 
@@ -47,7 +53,7 @@ const MovieCard = ({ item, category }: Props) => {
       <h3 className="font-medium text-white text-sm md:text-lg mt-4 transition duration-300 group-hover/container:text-red-main line-clamp-1 cursor-pointer">
         {item.title || item.name}
       </h3>
-    </Link>
+    </div>
   );
 };
 

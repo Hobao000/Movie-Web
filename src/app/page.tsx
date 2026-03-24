@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules'; 
 import 'swiper/css';
 import { Movie, MovieResponse } from '@/types/movie';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation'; 
 
 export default function HomePage() {
   const { data: trendingMovies, isLoading: isLoadTrending } = useQuery<MovieResponse>({
@@ -91,32 +91,39 @@ interface MovieSectionProps {
   viewMoreHref: string;
 }
 
-const MovieSection = ({ title, items, category, viewMoreHref }: MovieSectionProps) => (
-  <section className="mt-8 first:mt-0">
-    <div className="flex items-center justify-between mb-8 text-white px-2">
-      <span className="font-bold text-xl md:text-2xl border-l-4 border-red-600 pl-4">{title}</span>
-      <Link href={viewMoreHref} className="btn-sm btn-default opacity-80 hover:opacity-100 transition-all cursor-pointer">
-        View more
-      </Link>
-    </div>
-    
-    <Swiper 
-      modules={[Autoplay]}
-      autoplay={{
-        delay: 3000, 
-        disableOnInteraction: false, 
-        pauseOnMouseEnter: true, 
-      }}
-      grabCursor={true} 
-      spaceBetween={16} 
-      slidesPerView={'auto'}
-      className="!overflow-visible"
-    >
-      {items?.map((item, index) => (
-        <SwiperSlide key={`${item.id}-${index}`} className="!w-[150px] md:!w-[200px] lg:!w-[220px]">
-          <MovieCard item={item} category={category} />
-        </SwiperSlide>
-      ))}
-    </Swiper>
-  </section>
-);
+const MovieSection = ({ title, items, category, viewMoreHref }: MovieSectionProps) => {
+  const router = useRouter();
+
+  return (
+    <section className="mt-8 first:mt-0">
+      <div className="flex items-center justify-between mb-8 text-white px-2">
+        <span className="font-bold text-xl md:text-2xl border-l-4 border-red-600 pl-4">{title}</span>
+        <div 
+          onClick={() => router.push(viewMoreHref)} 
+          className="btn-sm btn-default opacity-80 hover:opacity-100 transition-all cursor-pointer"
+        >
+          View more
+        </div>
+      </div>
+      
+      <Swiper 
+        modules={[Autoplay]}
+        autoplay={{
+          delay: 3000, 
+          disableOnInteraction: false, 
+          pauseOnMouseEnter: true, 
+        }}
+        grabCursor={true} 
+        spaceBetween={16} 
+        slidesPerView={'auto'}
+        className="!overflow-visible"
+      >
+        {items?.map((item, index) => (
+          <SwiperSlide key={`${item.id}-${index}`} className="!w-[150px] md:!w-[200px] lg:!w-[220px]">
+            <MovieCard item={item} category={category} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </section>
+  );
+};
