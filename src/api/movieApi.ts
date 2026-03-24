@@ -11,13 +11,13 @@ import { filterCleanContent } from '@/utils/contentFilter';
 const fetchWithQuota = async (
   endpoint: string,
   params: Record<string, string | number | undefined>, 
-  targetCount: number = 24
+  targetCount: number = 12
 ): Promise<MovieResponse> => {
   let currentPage = Number(params.page) || 1;
-  let accumulatedMovies: Movie[] = []; 
+  let bucketMovies: Movie[] = []; 
   let lastResponse: MovieResponse | null = null; 
 
-  while (accumulatedMovies.length < targetCount) {
+  while (bucketMovies.length < targetCount) {
     const response = (await axiosClient.get(endpoint, {
       params: { ...params, page: currentPage, include_adult: false },
     })) as MovieResponse;
@@ -27,14 +27,14 @@ const fetchWithQuota = async (
     const cleanedData = filterCleanContent(lastResponse);
 
     if (cleanedData && cleanedData.results) {
-      accumulatedMovies = [...accumulatedMovies, ...cleanedData.results];
+      bucketMovies = [...bucketMovies, ...cleanedData.results];
     }
 
     if (currentPage >= lastResponse.total_pages) {
       break;
     }
 
-    if (accumulatedMovies.length < targetCount) {
+    if (bucketMovies.length < targetCount) {
       currentPage++;
     }
   }
@@ -43,7 +43,7 @@ const fetchWithQuota = async (
     throw new Error("Không thể tải dữ liệu từ máy chủ");
   }
 
-  const exactMovies = accumulatedMovies.slice(0, targetCount);
+  const exactMovies = bucketMovies.slice(0, targetCount);
 
   return {
     ...lastResponse,

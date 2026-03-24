@@ -95,7 +95,7 @@ const MovieSection = ({ title, items, category, viewMoreHref }: MovieSectionProp
   <section className="mt-8 first:mt-0">
     <div className="flex items-center justify-between mb-8 text-white px-2">
       <span className="font-bold text-xl md:text-2xl border-l-4 border-red-600 pl-4">{title}</span>
-      <Link href={viewMoreHref} className="btn-sm btn-default opacity-80 hover:opacity-100 transition-all">
+      <Link href={viewMoreHref} className="btn-sm btn-default opacity-80 hover:opacity-100 transition-all cursor-pointer">
         View more
       </Link>
     </div>

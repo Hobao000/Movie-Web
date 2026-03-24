@@ -81,7 +81,7 @@ const BannerSlide = ({ items }: { items: Movie[] }) => {
         ))}
       </Swiper>
 
-      {/* --- PHẦN POPUP TRAILER (MODAL) --- */}
+      {/*TRAILER (MODAL)*/}
       {trailerSrc && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-all duration-300">
           <div className="relative w-full max-w-screen-md aspect-video bg-black-main shadow-2xl border border-white/10 p-2 md:p-8">

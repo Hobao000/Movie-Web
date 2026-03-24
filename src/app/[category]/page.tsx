@@ -1,4 +1,4 @@
-import MediaCatalog from "@/components/MediaCatalog";
+import MediaCatalog from "@/components/Catalog";
 import { notFound } from "next/navigation";
 
 type CategoryPageProps = {

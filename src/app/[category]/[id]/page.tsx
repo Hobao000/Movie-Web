@@ -1,4 +1,4 @@
-import MediaDetail from "@/components/MediaDetail";
+import MediaDetail from "@/components/Detail";
 import { notFound } from "next/navigation";
 
 type DetailPageProps = {
