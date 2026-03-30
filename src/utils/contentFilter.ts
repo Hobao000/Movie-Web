@@ -7,7 +7,7 @@ export const filterCleanContent = (response: MovieResponse): MovieResponse => {
   if (!response || !response.results) return response;
 
   response.results = response.results.filter((item) => {
-    // Chặn ngay nếu API đánh dấu adult = true
+    // Chặn API đánh dấu adult = true
     if (item.adult === true) return false;
 
     // Gom Tên phim, Tên gốc và Nội dung phim
@@ -21,7 +21,7 @@ export const filterCleanContent = (response: MovieResponse): MovieResponse => {
     // Gộp tất cả lại thành 1 chuỗi
     const textToCheck = `${title} ${originalTitle} ${overview} ${everythingElse}`.toLowerCase();
 
-    // Quét Regex: Trả về TRUE (giữ lại) nếu KHÔNG chứa từ cấm
+    // Quét Regex: Trả về TRUE nếu KHÔNG chứa từ cấm
     return !BANNED_REGEX.test(textToCheck);
   });
 

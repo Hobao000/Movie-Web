@@ -8,10 +8,10 @@ import {
 } from '@/types/movie';
 import { filterCleanContent } from '@/utils/contentFilter';
 
-const fetchWithQuota = async (
+const fetchQuantity = async (
   endpoint: string,
   params: Record<string, string | number | undefined>, 
-  targetCount: number = 18
+  targetCount: number = 12
 ): Promise<MovieResponse> => {
   let currentPage = Number(params.page) || 1;
   let bucketMovies: Movie[] = []; 
@@ -54,19 +54,19 @@ const fetchWithQuota = async (
 
 export const movieApi = {
   getTrending: (type: 'movie' | 'tv', page: number = 1) =>
-    fetchWithQuota(`/trending/${type}/day`, { page }),
+    fetchQuantity(`/trending/${type}/day`, { page }),
 
   getTopRated: (type: 'movie' | 'tv', page: number = 1) =>
-    fetchWithQuota(`/${type}/top_rated`, { page }),
+    fetchQuantity(`/${type}/top_rated`, { page }),
 
   getPopular: (type: 'movie' | 'tv', page: number = 1) =>
-    fetchWithQuota(`/${type}/popular`, { page }),
+    fetchQuantity(`/${type}/popular`, { page }),
 
   search: (type: 'movie' | 'tv', keyword: string, page: number = 1) =>
-    fetchWithQuota(`/search/${type}`, { query: keyword, page }),
+    fetchQuantity(`/search/${type}`, { query: keyword, page }),
 
   getSimilar: (type: 'movie' | 'tv', id: number, page: number = 1) =>
-    fetchWithQuota(`/${type}/${id}/similar`, { page }),
+    fetchQuantity(`/${type}/${id}/similar`, { page }),
 
   getVideos: (type: 'movie' | 'tv', id: number) =>
     axiosClient.get(`/${type}/${id}/videos`) as Promise<VideoResponse>,

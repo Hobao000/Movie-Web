@@ -130,7 +130,7 @@ export default function MediaCatalog({ searchParams, category }: CatalogProps) {
                 <button 
                   onClick={() => fetchNextPage()}
                   disabled={isFetchingNextPage}
-                  className="btn-sm btn-default px-12 py-3 border border-white/20 hover:bg-red-main hover:border-red-main transition-all disabled:opacity-50 rounded-full font-bold"
+                  className="btn-sm btn-default px-12 py-3 border border-white/20 hover:bg-red-main hover:border-red-main transition-all disabled:opacity-50 rounded-full font-bold cursor-pointer"
                 >
                   {isFetchingNextPage ? "Loading more..." : "Watch more"}
                 </button>
